@@ -25,7 +25,12 @@ class GaussianModel:
 
     def setup_functions(self):
         def build_covariance_from_scaling_rotation(center, scaling, scaling_modifier, rotation):
+            """
+            这个函数与原版的函数功能存在差异，原本的函数是为了计算协方差矩阵，但是这里的函数是为了计算仿射变换矩阵
+            在build_scaling_rotation函数中， cat(,dim=-1)代表在最后一个维度上进行拼接，目前看来这个拼接是多余的，后面可以测试一下，然后不要忘记了转置RS
+            """
             RS = build_scaling_rotation(torch.cat([scaling * scaling_modifier, torch.ones_like(scaling)], dim=-1), rotation).permute(0,2,1)
+            # 以下构成H仿射矩阵
             trans = torch.zeros((center.shape[0], 4, 4), dtype=torch.float, device="cuda")
             trans[:,:3,:3] = RS
             trans[:, 3,:3] = center

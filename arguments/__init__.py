@@ -94,6 +94,7 @@ class OptimizationParams(ParamGroup):
         self.densify_grad_threshold = 0.0002
         super().__init__(parser, "Optimization Parameters")
 
+# 这段代码的主要目的是结合命令行参数和配置文件中的参数，生成一个包含所有参数的Namespace对象
 def get_combined_args(parser : ArgumentParser):
     cmdlne_string = sys.argv[1:]
     cfgfile_string = "Namespace()"
