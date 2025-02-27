@@ -72,6 +72,7 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
             [0, 0, far-near, near],
             [0, 0, 0, 1]]).float().cuda().T
         world2pix =  viewpoint_camera.full_proj_transform @ ndc2pix
+        # splat2world = [N, 4, 4], world2pix = [4, 4],  下面就是 [N, 3, 4] @ [4, 3] -> [N, 3, 3]，然后转置，最后reshape成[N, 9]
         cov3D_precomp = (splat2world[:, [0,1,3]] @ world2pix[:,[0,1,3]]).permute(0,2,1).reshape(-1, 9) # column major
     else:
         scales = pc.get_scaling
